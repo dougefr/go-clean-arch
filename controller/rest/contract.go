@@ -1,4 +1,4 @@
-package controller
+package rest
 
 // RestRequest ...
 type RestRequest struct {

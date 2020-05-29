@@ -4,7 +4,8 @@ import (
 	"github.com/dougefr/go-clean-code/entity"
 	"github.com/dougefr/go-clean-code/infrastructure/database"
 	. "github.com/dougefr/go-clean-code/infrastructure/database/entity"
-	"github.com/dougefr/go-clean-code/usecase"
+	"github.com/dougefr/go-clean-code/usecase/entitygateway"
+
 	// sqlite
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -14,7 +15,7 @@ type userRepo struct {
 }
 
 // NewUserRepo ...
-func NewUserRepo(db database.Database) usecase.UserRepo {
+func NewUserRepo(db database.Database) entitygateway.User {
 	return userRepo{
 		db: db,
 	}

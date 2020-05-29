@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/dougefr/go-clean-code/controller"
+	"github.com/dougefr/go-clean-code/controller/rest"
 	"github.com/gofiber/fiber"
 )
 
@@ -11,11 +11,11 @@ type APIServer interface {
 }
 
 type apiServer struct {
-	userController controller.User
+	userController rest.User
 }
 
 // NewAPIServer ...
-func NewAPIServer(userController controller.User) APIServer {
+func NewAPIServer(userController rest.User) APIServer {
 	return apiServer{
 		userController: userController,
 	}
@@ -34,9 +34,9 @@ func (a apiServer) Start(port int) error {
 	return nil
 }
 
-func do(fn func(controller.RestRequest) controller.RestResponse) func(ctx *fiber.Ctx) {
+func do(fn func(rest.RestRequest) rest.RestResponse) func(ctx *fiber.Ctx) {
 	return func(ctx *fiber.Ctx) {
-		var req controller.RestRequest
+		var req rest.RestRequest
 		req.Body = ctx.Fasthttp.PostBody()
 		resp := fn(req)
 		ctx.Status(resp.StatusCode).SendBytes(resp.Body)

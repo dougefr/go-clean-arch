@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"github.com/dougefr/go-clean-code/entity"
+	"github.com/dougefr/go-clean-code/usecase/entitygateway"
 )
 
 // CreateUserRequestModel ...
@@ -24,13 +25,13 @@ type CreateUser interface {
 }
 
 type createUser struct {
-	userRepo UserRepo
+	userGateway entitygateway.User
 }
 
 // NewCreateUser ...
-func NewCreateUser(userRepo UserRepo) CreateUser {
+func NewCreateUser(userGateway entitygateway.User) CreateUser {
 	return createUser{
-		userRepo: userRepo,
+		userGateway: userGateway,
 	}
 }
 
@@ -49,7 +50,7 @@ func (c createUser) Execute(user CreateUserRequestModel) (response CreateUserRes
 		return
 	}*/
 
-	userCreated, err := c.userRepo.CreateUser(entity.User{
+	userCreated, err := c.userGateway.CreateUser(entity.User{
 		Name:  user.Name,
 		Email: user.Email,
 	})
