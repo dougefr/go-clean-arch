@@ -8,23 +8,30 @@ import (
 	"github.com/dougefr/go-clean-arch/usecase"
 	"github.com/google/uuid"
 	"net/http"
+	"time"
 )
 
 // User ...
 type User interface {
 	CreateUser(req RestRequest) RestResponse
+	SearchUser(req RestRequest) RestResponse
 }
 
 type user struct {
 	ucCreateUser usecase.CreateUser
+	ucSearchUser usecase.SearchUser
 	session      iinfra.Session
 	logger       iinfra.LogProvider
 }
 
 // NewUser ...
-func NewUser(ucCreateUser usecase.CreateUser, session iinfra.Session, logger iinfra.LogProvider) User {
+func NewUser(ucCreateUser usecase.CreateUser,
+	ucSearchUser usecase.SearchUser,
+	session iinfra.Session,
+	logger iinfra.LogProvider) User {
 	return user{
 		ucCreateUser: ucCreateUser,
+		ucSearchUser: ucSearchUser,
 		session:      session,
 		logger:       logger,
 	}
@@ -32,10 +39,11 @@ func NewUser(ucCreateUser usecase.CreateUser, session iinfra.Session, logger iin
 
 // CreateUser ...
 func (u user) CreateUser(req RestRequest) (res RestResponse) {
+	startTime := time.Now()
 	ctx := context.WithValue(context.Background(), iinfra.ContextKeyGlobalLogAttrs, iinfra.LogAttrs{
 		"request-id": uuid.New(),
 	})
-	u.logger.Info(ctx, "starting create user")
+	u.logger.Debug(ctx, "starting create user")
 
 	var reqBody struct {
 		Name  string `json:"name"`
@@ -94,24 +102,53 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 		u.logger.Error(ctx, fmt.Sprintf("error when commiting tx: %v", err))
 		return respondError(err)
 	}
+
+	u.logger.Debug(ctx, "ending create user method", iinfra.LogAttrs{
+		"duration": time.Since(startTime),
+	})
+
 	return
 }
 
-func respondError(err error) (res RestResponse) {
-	if be, ok := err.(usecase.BusinessError); ok {
-		res.Body = []byte(be.Error())
-		switch be {
-		case usecase.ErrCreateUserNotFound:
-			res.StatusCode = http.StatusNotFound
-		default:
-			res.StatusCode = http.StatusBadRequest
-		}
+// SearchUser ...
+func (u user) SearchUser(req RestRequest) (res RestResponse) {
+	startTime := time.Now()
+	ctx := context.WithValue(context.Background(), iinfra.ContextKeyGlobalLogAttrs, iinfra.LogAttrs{
+		"request-id": uuid.New(),
+	})
+	u.logger.Debug(ctx, "starting create user")
 
-		return
+	var filter usecase.SearchUserRequestModel
+	filter.Email = req.GetQueryParam("email")
+
+	ucResModel, err := u.ucSearchUser.Execute(ctx, filter)
+	if err != nil {
+		u.logger.Error(ctx, fmt.Sprintf("error when executing usecase: %v", err))
+		return respondError(err)
 	}
 
-	res.Body = []byte("internal server error")
-	res.StatusCode = http.StatusInternalServerError
+	type resBodyType struct {
+		ID    uint   `json:"id"`
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+	var resBody []resBodyType
+	for _, modelUser := range ucResModel.Users {
+		resBody = append(resBody, resBodyType{
+			ID:    modelUser.ID,
+			Name:  modelUser.Name,
+			Email: modelUser.Email,
+		})
+	}
+
+	if res.Body, err = json.Marshal(resBody); err != nil {
+		u.logger.Error(ctx, fmt.Sprintf("error when marshalling response body: %v", err))
+		return respondError(err)
+	}
+
+	u.logger.Debug(ctx, "ending create user method", iinfra.LogAttrs{
+		"duration": time.Since(startTime),
+	})
 
 	return
 }

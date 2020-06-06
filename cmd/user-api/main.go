@@ -25,10 +25,12 @@ func main() {
 
 	userRepo := repository.NewUserRepo(db, logger)
 	ucCreateUser := usecase.NewCreateUser(userRepo)
-	userController := restctrl.NewUser(ucCreateUser, db, logger)
+	ucSearchUser := usecase.NewSearchUser(userRepo)
+	userController := restctrl.NewUser(ucCreateUser, ucSearchUser, db, logger)
 
 	app := fiber.New()
 	app.Post("/user", do(userController.CreateUser))
+	app.Get("/user", do(userController.SearchUser))
 
 	if err = app.Listen(8080); err != nil {
 		fmt.Println(err.Error())
@@ -40,6 +42,9 @@ func do(fn func(restctrl.RestRequest) restctrl.RestResponse) func(ctx *fiber.Ctx
 	return func(ctx *fiber.Ctx) {
 		var req restctrl.RestRequest
 		req.Body = ctx.Fasthttp.PostBody()
+		req.GetQueryParam = func(key string) string {
+			return ctx.Query(key)
+		}
 		resp := fn(req)
 		ctx.Status(resp.StatusCode).SendBytes(resp.Body)
 	}

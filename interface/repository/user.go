@@ -70,3 +70,26 @@ func (u userRepo) CreateUser(ctx context.Context, user entity.User) (userCreated
 		Email: user.Email,
 	}, err
 }
+
+// FindAll ...
+func (u userRepo) FindAll(ctx context.Context) (users []entity.User, err error) {
+	var rows *sql.Rows
+	rows, err = u.db.Query(ctx, "SELECT id, name, email FROM users")
+	if err != nil {
+		u.logger.Error(ctx, fmt.Sprintf("error when executing query: %v", err))
+		return
+	}
+
+	for rows.Next() {
+		var user entity.User
+		err = rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
+			u.logger.Error(ctx, fmt.Sprintf("error when scanning query result: %v", err))
+			return
+		}
+
+		users = append(users, user)
+	}
+
+	return
+}
