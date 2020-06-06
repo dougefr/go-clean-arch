@@ -11,6 +11,7 @@ type loggerProvider struct {
 	l *log.Logger
 }
 
+// NewLog ...
 func NewLog(logLevel string) (l iinfra.LogProvider, err error) {
 	var level log.Level
 	level, err = log.ParseLevel(logLevel)

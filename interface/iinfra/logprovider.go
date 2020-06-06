@@ -2,7 +2,7 @@ package iinfra
 
 import "context"
 
-// ContextKeyTx ...
+// ContextKeyGlobalLogAttrs ...
 const ContextKeyGlobalLogAttrs string = "ContextKeyGlobalLogAttrs"
 
 // LogProvider ...
@@ -13,4 +13,5 @@ type LogProvider interface {
 	Warn(ctx context.Context, message string, attrs ...LogAttrs)
 }
 
+// LogAttrs ...
 type LogAttrs map[string]interface{}

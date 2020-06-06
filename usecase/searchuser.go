@@ -8,7 +8,7 @@ import (
 	"github.com/dougefr/go-clean-arch/usecase/gateway"
 )
 
-// SearchUserResponseModel ...
+// SearchUserRequestModel ...
 type SearchUserRequestModel struct {
 	Email string
 }
@@ -25,7 +25,7 @@ type SearchUserResponseModelUser struct {
 	Email string
 }
 
-// CreateUser ...
+// SearchUser ...
 type SearchUser interface {
 	Execute(ctx context.Context, filter SearchUserRequestModel) (SearchUserResponseModel, error)
 }
