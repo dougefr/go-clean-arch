@@ -1,4 +1,4 @@
-package rest
+package restctrl
 
 // RestRequest ...
 type RestRequest struct {

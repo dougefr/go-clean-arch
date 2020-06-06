@@ -12,3 +12,6 @@ fmt:
 lint:
 	$(GOPATH)/bin/golint -set_exit_status -min_confidence 0.9 $(path)
 	@echo "Golint found no problems on your code!"
+
+run:
+	go run ./cmd/user-api/main.go

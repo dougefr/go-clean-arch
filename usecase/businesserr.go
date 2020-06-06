@@ -16,4 +16,6 @@ var (
 	ErrCreateUserErrEmptyName BusinessError = errors.New("user name cannot be empty")
 	// ErrCreateUserErrEmptyEmail ...
 	ErrCreateUserErrEmptyEmail BusinessError = errors.New("user email cannot be empty")
+	// ErrCreateUserAlreadyExists ...
+	ErrCreateUserAlreadyExists BusinessError = errors.New("user already exists")
 )
