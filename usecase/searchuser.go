@@ -43,7 +43,6 @@ func NewSearchUser(userGateway gateway.User) SearchUser {
 
 func (c searchUser) Execute(ctx context.Context,
 	filter SearchUserRequestModel) (response SearchUserResponseModel, err error) {
-
 	var users []entity.User
 	if filter.Email == "" {
 		users, err = c.userGateway.FindAll(ctx)
