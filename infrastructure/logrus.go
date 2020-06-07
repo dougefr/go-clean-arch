@@ -1,4 +1,4 @@
-package logrus
+package infrastructure
 
 import (
 	"context"
@@ -11,8 +11,8 @@ type loggerProvider struct {
 	l *log.Logger
 }
 
-// NewLog ...
-func NewLog(logLevel string) (l iinfra.LogProvider, err error) {
+// NewLogrus ...
+func NewLogrus(logLevel string) (l iinfra.LogProvider, err error) {
 	var level log.Level
 	level, err = log.ParseLevel(logLevel)
 	if err != nil {
@@ -31,12 +31,14 @@ func NewLog(logLevel string) (l iinfra.LogProvider, err error) {
 
 func (l loggerProvider) Info(ctx context.Context, message string, attrs ...iinfra.LogAttrs) {
 	if l.l.IsLevelEnabled(log.InfoLevel) {
-		if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
-			attrs = append(attrs, a)
-		}
+		go func() {
+			if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
+				attrs = append(attrs, a)
+			}
 
-		attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
-		l.l.WithFields(mergeAttrs(attrs)).Info(message)
+			attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
+			l.l.WithFields(mergeAttrs(attrs)).Info(message)
+		}()
 	}
 }
 

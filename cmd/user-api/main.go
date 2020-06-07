@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"github.com/dougefr/go-clean-arch/infrastructure/logrus"
-	"github.com/dougefr/go-clean-arch/infrastructure/sqlite3"
+	"github.com/dougefr/go-clean-arch/infrastructure"
 	"github.com/dougefr/go-clean-arch/interface/repository"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
 	"github.com/dougefr/go-clean-arch/usecase"
@@ -12,12 +12,12 @@ import (
 )
 
 func main() {
-	db, err := sqlite3.NewDatabase()
+	db, err := infrastructure.NewSQLite3()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	logger, err := logrus.NewLog("debug")
+	logger, err := infrastructure.NewLogrus("debug")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
@@ -32,6 +32,7 @@ func main() {
 	app.Post("/user", do(userController.CreateUser))
 	app.Get("/user", do(userController.SearchUser))
 
+	logger.Info(context.Background(), "listening to port 8080...")
 	if err = app.Listen(8080); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)

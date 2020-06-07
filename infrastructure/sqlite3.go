@@ -1,4 +1,4 @@
-package sqlite3
+package infrastructure
 
 import (
 	"context"
@@ -10,8 +10,8 @@ type sqlite3 struct {
 	db *sql.DB
 }
 
-// NewDatabase ...
-func NewDatabase() (iinfra.Database, error) {
+// NewSQLite3 ...
+func NewSQLite3() (iinfra.Database, error) {
 	db, err := sql.Open("sqlite3", "test.db")
 	if err != nil {
 		return nil, err
