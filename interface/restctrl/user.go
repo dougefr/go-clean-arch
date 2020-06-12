@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
+	"github.com/dougefr/go-clean-arch/core/usecase"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	"github.com/google/uuid"
 	"net/http"
@@ -19,15 +19,15 @@ type User interface {
 }
 
 type user struct {
-	ucCreateUser usecase2.CreateUser
-	ucSearchUser usecase2.SearchUser
+	ucCreateUser usecase.CreateUser
+	ucSearchUser usecase.SearchUser
 	session      iinfra.Session
 	logger       iinfra.LogProvider
 }
 
 // NewUser ...
-func NewUser(ucCreateUser usecase2.CreateUser,
-	ucSearchUser usecase2.SearchUser,
+func NewUser(ucCreateUser usecase.CreateUser,
+	ucSearchUser usecase.SearchUser,
 	session iinfra.Session,
 	logger iinfra.LogProvider) User {
 	return user{
@@ -57,7 +57,7 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	ucReqModel := usecase2.CreateUserRequestModel{
+	ucReqModel := usecase.CreateUserRequestModel{
 		Name:  reqBody.Name,
 		Email: reqBody.Email,
 	}
@@ -119,7 +119,7 @@ func (u user) SearchUser(req RestRequest) (res RestResponse) {
 	})
 	u.logger.Debug(ctx, "starting create user")
 
-	var filter usecase2.SearchUserRequestModel
+	var filter usecase.SearchUserRequestModel
 	filter.Email = req.GetQueryParam("email")
 
 	ucResModel, err := u.ucSearchUser.Execute(ctx, filter)
