@@ -8,6 +8,7 @@ import (
 	"github.com/dougefr/go-clean-arch/usecase"
 	"github.com/google/uuid"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -79,11 +80,11 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 	}
 
 	var resBody struct {
-		ID    int    `json:"id"`
+		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
-	resBody.ID = ucResModel.ID
+	resBody.ID = strconv.FormatInt(ucResModel.ID, 10)
 	resBody.Name = ucResModel.Name
 	resBody.Email = ucResModel.Email
 
@@ -128,14 +129,14 @@ func (u user) SearchUser(req RestRequest) (res RestResponse) {
 	}
 
 	type resBodyType struct {
-		ID    uint   `json:"id"`
+		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
 	var resBody []resBodyType
 	for _, modelUser := range ucResModel.Users {
 		resBody = append(resBody, resBodyType{
-			ID:    modelUser.ID,
+			ID:    strconv.FormatInt(modelUser.ID, 10),
 			Name:  modelUser.Name,
 			Email: modelUser.Email,
 		})

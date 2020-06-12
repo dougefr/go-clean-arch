@@ -5,37 +5,39 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/entity"
-	"github.com/dougefr/go-clean-arch/usecase/gateway"
+	"github.com/dougefr/go-clean-arch/usecase/igateway"
 )
 
-// SearchUserRequestModel ...
-type SearchUserRequestModel struct {
-	Email string
-}
+type (
+	// SearchUserRequestModel ...
+	SearchUserRequestModel struct {
+		Email string
+	}
 
-// SearchUserResponseModel ...
-type SearchUserResponseModel struct {
-	Users []SearchUserResponseModelUser
-}
+	// SearchUserResponseModel ...
+	SearchUserResponseModel struct {
+		Users []SearchUserResponseModelUser
+	}
 
-// SearchUserResponseModelUser ...
-type SearchUserResponseModelUser struct {
-	ID    uint
-	Name  string
-	Email string
-}
+	// SearchUserResponseModelUser ...
+	SearchUserResponseModelUser struct {
+		ID    int64
+		Name  string
+		Email string
+	}
 
-// SearchUser ...
-type SearchUser interface {
-	Execute(ctx context.Context, filter SearchUserRequestModel) (SearchUserResponseModel, error)
-}
+	// SearchUser ...
+	SearchUser interface {
+		Execute(ctx context.Context, filter SearchUserRequestModel) (SearchUserResponseModel, error)
+	}
 
-type searchUser struct {
-	userGateway gateway.User
-}
+	searchUser struct {
+		userGateway igateway.User
+	}
+)
 
 // NewSearchUser ...
-func NewSearchUser(userGateway gateway.User) SearchUser {
+func NewSearchUser(userGateway igateway.User) SearchUser {
 	return searchUser{
 		userGateway: userGateway,
 	}

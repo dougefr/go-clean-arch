@@ -5,33 +5,35 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/entity"
-	"github.com/dougefr/go-clean-arch/usecase/gateway"
+	"github.com/dougefr/go-clean-arch/usecase/igateway"
 )
 
-// CreateUserRequestModel ...
-type CreateUserRequestModel struct {
-	Name  string
-	Email string
-}
+type (
+	// CreateUserRequestModel ...
+	CreateUserRequestModel struct {
+		Name  string
+		Email string
+	}
 
-// CreateUserResponseModel ...
-type CreateUserResponseModel struct {
-	ID    int
-	Name  string
-	Email string
-}
+	// CreateUserResponseModel ...
+	CreateUserResponseModel struct {
+		ID    int64
+		Name  string
+		Email string
+	}
 
-// CreateUser ...
-type CreateUser interface {
-	Execute(ctx context.Context, user CreateUserRequestModel) (CreateUserResponseModel, error)
-}
+	// CreateUser ...
+	CreateUser interface {
+		Execute(ctx context.Context, user CreateUserRequestModel) (CreateUserResponseModel, error)
+	}
 
-type createUser struct {
-	userGateway gateway.User
-}
+	createUser struct {
+		userGateway igateway.User
+	}
+)
 
 // NewCreateUser ...
-func NewCreateUser(userGateway gateway.User) CreateUser {
+func NewCreateUser(userGateway igateway.User) CreateUser {
 	return createUser{
 		userGateway: userGateway,
 	}
@@ -57,7 +59,7 @@ func (c createUser) Execute(ctx context.Context,
 		return
 	}
 
-	userCreated, err := c.userGateway.CreateUser(ctx, entity.User{
+	userCreated, err := c.userGateway.Create(ctx, entity.User{
 		Name:  user.Name,
 		Email: user.Email,
 	})
@@ -66,6 +68,7 @@ func (c createUser) Execute(ctx context.Context,
 		return
 	}
 
+	response.ID = userCreated.ID
 	response.Name = userCreated.Name
 	response.Email = userCreated.Email
 

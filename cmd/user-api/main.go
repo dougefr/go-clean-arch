@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/dougefr/go-clean-arch/infrastructure"
-	"github.com/dougefr/go-clean-arch/interface/repository"
+	"github.com/dougefr/go-clean-arch/infra"
+	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
 	"github.com/dougefr/go-clean-arch/usecase"
 	"github.com/gofiber/fiber"
@@ -12,18 +12,18 @@ import (
 )
 
 func main() {
-	db, err := infrastructure.NewSQLite3()
+	db, err := infra.NewSQLite3()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	logger, err := infrastructure.NewLogrus("debug")
+	logger, err := infra.NewLogrus("debug")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 
-	userRepo := repository.NewUserRepo(db, logger)
+	userRepo := gateway.NewUserGateway(db, logger)
 	ucCreateUser := usecase.NewCreateUser(userRepo)
 	ucSearchUser := usecase.NewSearchUser(userRepo)
 	userController := restctrl.NewUser(ucCreateUser, ucSearchUser, db, logger)
