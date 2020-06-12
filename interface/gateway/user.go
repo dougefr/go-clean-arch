@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/igateway"
 	"github.com/dougefr/go-clean-arch/core/usecase"
+	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	"time"
 

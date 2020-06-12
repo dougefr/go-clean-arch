@@ -21,6 +21,6 @@ run:
 	go run ./cmd/user-api/main.go
 
 mock:
-	mockgen -source=./core/igateway/user.go -destination=./core/igateway/mock_igateway/user.go
+	mockgen -source=./core/usecase/igateway/user.go -destination=./core/usecase/igateway/mock_igateway/user.go
 	mockgen -source=./interface/iinfra/database.go -destination=./interface/iinfra/mock_iinfra/database.go
 	mockgen -source=./interface/iinfra/logprovider.go -destination=./interface/iinfra/mock_iinfra/logprovider.go

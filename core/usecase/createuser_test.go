@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/igateway/mock_igateway"
+	"github.com/dougefr/go-clean-arch/core/usecase/igateway/mock_igateway"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"
