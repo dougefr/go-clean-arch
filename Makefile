@@ -1,6 +1,7 @@
 #!make
 
 path=./...
+GOPATH=$(shell go env GOPATH)
 
 setup: .make.setup
 .make.setup:
@@ -19,7 +20,7 @@ fmt: setup
 	find . -name \*.go -exec goimports -w {} \;
 
 lint: setup
-	${GOPATH}/bin/golint -set_exit_status -min_confidence 0.9 $(path)
+	$(GOPATH)/bin/golint -set_exit_status -min_confidence 0.9 $(path)
 	@echo "Golint found no problems on your code!"
 	go vet $(path)
 
