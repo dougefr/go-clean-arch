@@ -18,7 +18,7 @@ fmt: setup
 	go fmt $(path)
 	find . -name \*.go -exec goimports -w {} \;
 
-lint:
+lint: setup
 	$(GOPATH)/bin/golint -set_exit_status -min_confidence 0.9 $(path)
 	@echo "Golint found no problems on your code!"
 	go vet $(path)
