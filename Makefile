@@ -2,6 +2,7 @@
 
 path=./...
 GOPATH=$(shell go env GOPATH)
+min_coverage=1
 
 setup: .make.setup
 .make.setup:
@@ -30,7 +31,6 @@ test: mock
 fullcover:
 	go test -coverprofile=cover.out $(path)
 	go tool cover -func=cover.out || true
-	rm cover.out
 
 run:
 	go run ./cmd/user-api/main.go
