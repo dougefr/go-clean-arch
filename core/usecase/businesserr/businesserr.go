@@ -4,18 +4,41 @@ import (
 	"errors"
 )
 
-// BusinessError ...
-type BusinessError interface {
-	error
+type (
+	// BusinessError ...
+	BusinessError interface {
+		error
+		Code() string
+	}
+
+	businessError struct {
+		err  error
+		code string
+	}
+)
+
+func newBusinessError(code, error string) BusinessError {
+	return businessError{
+		err:  errors.New(error),
+		code: code,
+	}
+}
+
+func (b businessError) Error() string {
+	return b.err.Error()
+}
+
+func (b businessError) Code() string {
+	return b.code
 }
 
 var (
 	// ErrCreateUserNotFound ...
-	ErrCreateUserNotFound BusinessError = errors.New("not found")
+	ErrCreateUserNotFound = newBusinessError("ErrCreateUserNotFound", "not found")
 	// ErrCreateUserErrEmptyName ...
-	ErrCreateUserErrEmptyName BusinessError = errors.New("user name cannot be empty")
+	ErrCreateUserErrEmptyName = newBusinessError("ErrCreateUserErrEmptyName", "user name cannot be empty")
 	// ErrCreateUserErrEmptyEmail ...
-	ErrCreateUserErrEmptyEmail BusinessError = errors.New("user email cannot be empty")
+	ErrCreateUserErrEmptyEmail = newBusinessError("ErrCreateUserErrEmptyEmail", "user email cannot be empty")
 	// ErrCreateUserAlreadyExists ...
-	ErrCreateUserAlreadyExists BusinessError = errors.New("user already exists")
+	ErrCreateUserAlreadyExists = newBusinessError("ErrCreateUserAlreadyExists", "user already exists")
 )

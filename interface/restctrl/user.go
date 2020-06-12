@@ -89,10 +89,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 	ucResModel, err := u.ucCreateUser.Execute(ctx, ucReqModel)
 	if err != nil {
 		u.logger.Error(ctx, fmt.Sprintf("error when executing core: %v", err))
-		if err2 := u.session.RollbackTx(tx); err2 != nil {
-			u.logger.Error(ctx, fmt.Sprintf("error when rollbacking tx: %v", err2))
-			return respondError(err2)
-		}
+		_ = u.session.RollbackTx(tx)
 		return respondError(err)
 	}
 
@@ -101,15 +98,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 	resBody.Name = ucResModel.Name
 	resBody.Email = ucResModel.Email
 
-	if res.Body, err = json.Marshal(resBody); err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when marshalling response body: %v", err))
-		if err2 := u.session.RollbackTx(tx); err2 != nil {
-			u.logger.Error(ctx, fmt.Sprintf("error when rollbacking tx: %v", err2))
-			return respondError(err2)
-		}
-		return respondError(err)
-	}
-
+	res.Body, _ = json.Marshal(resBody)
 	res.StatusCode = http.StatusCreated
 
 	if err = u.session.CommitTx(tx); err != nil {
