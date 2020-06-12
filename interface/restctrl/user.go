@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
-	"github.com/dougefr/go-clean-arch/interface/iinfra"
-	"github.com/google/uuid"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
+	"github.com/dougefr/go-clean-arch/interface/iinfra"
+	"github.com/google/uuid"
 )
 
 // User ...

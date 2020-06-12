@@ -8,10 +8,12 @@ setup: .make.setup
 	GO111MODULE=off go get -u golang.org/x/lint/golint
 	GO111MODULE=off go get -u github.com/golang/mock/mockgen
 	GO111MODULE=off go get -u golang.org/x/tools/cmd/cover
+	GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
 	touch .make.setup
 
-fmt:
+fmt: setup
 	go fmt $(path)
+	find . -name \*.go -exec goimports -w {} \;
 
 lint:
 	$(GOPATH)/bin/golint -set_exit_status -min_confidence 0.9 $(path)

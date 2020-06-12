@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/infra"
 	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
 	"github.com/gofiber/fiber"
-	"os"
 )
 
 func main() {

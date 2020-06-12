@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/dougefr/go-clean-arch/core/entity"
 	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway"

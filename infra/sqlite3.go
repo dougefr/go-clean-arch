@@ -3,6 +3,7 @@ package infra
 import (
 	"context"
 	"database/sql"
+
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
 )
 

@@ -3,12 +3,13 @@ package interactor
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/dougefr/go-clean-arch/core/entity"
 	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway/mock_igateway"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestSearchUser_Execute(t *testing.T) {

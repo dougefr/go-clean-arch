@@ -2,9 +2,10 @@ package infra
 
 import (
 	"context"
+	"runtime"
+
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	log "github.com/sirupsen/logrus"
-	"runtime"
 )
 
 type loggerProvider struct {

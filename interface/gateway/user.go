@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/dougefr/go-clean-arch/core/entity"
 	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
-	"time"
 
 	// sqlite
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
