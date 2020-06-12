@@ -130,20 +130,17 @@ func (u user) Search(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	type resBodyType searchResBody
-	var resBody []resBodyType
+	var resBody []searchResBody
 	for _, modelUser := range ucResModel.Users {
-		resBody = append(resBody, resBodyType{
+		resBody = append(resBody, searchResBody{
 			ID:    strconv.FormatInt(modelUser.ID, 10),
 			Name:  modelUser.Name,
 			Email: modelUser.Email,
 		})
 	}
 
-	if res.Body, err = json.Marshal(resBody); err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when marshalling response body: %v", err))
-		return respondError(err)
-	}
+	res.Body, _ = json.Marshal(resBody)
+	res.StatusCode = http.StatusOK
 
 	u.logger.Debug(ctx, "ending create user method", iinfra.LogAttrs{
 		"duration": time.Since(startTime),

@@ -162,3 +162,78 @@ func TestUserCreate(t *testing.T) {
 		}, resBody)
 	})
 }
+
+func TestUserSearch(t *testing.T) {
+	fakeError := errors.New("fake-error")
+	const fakeName = "fake name"
+	const fakeEmail = "fake@email.com"
+
+	t.Run("should results in StatusInternalServerError if usecase interactor return any unknown error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		logger := mock_iinfra.NewMockLogProvider(ctrl)
+		logger.EXPECT().Debug(gomock.Any(), gomock.Any())
+		logger.EXPECT().Error(gomock.Any(), gomock.Any())
+
+		ucSearchUser := mock_interactor.NewMockSearchUser(ctrl)
+		ucSearchUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.SearchUserResponseModel{}, fakeError)
+
+		c := NewUser(nil, ucSearchUser, nil, logger)
+		res := c.Search(RestRequest{
+			GetQueryParam: func(key string) string {
+				return fakeEmail
+			},
+		})
+
+		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
+	})
+
+	t.Run("should results in StatusOK if usecase interactor when everything goes fine", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		logger := mock_iinfra.NewMockLogProvider(ctrl)
+		logger.EXPECT().Debug(gomock.Any(), gomock.Any(), gomock.Any()).Times(2)
+
+		ucSearchUser := mock_interactor.NewMockSearchUser(ctrl)
+		ucSearchUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.SearchUserResponseModel{
+			Users: []interactor.SearchUserResponseModelUser{
+				{
+					ID:    1,
+					Name:  fakeName,
+					Email: fakeEmail,
+				},
+				{
+					ID:    2,
+					Name:  fakeName,
+					Email: fakeEmail,
+				},
+			},
+		}, nil)
+
+		c := NewUser(nil, ucSearchUser, nil, logger)
+		res := c.Search(RestRequest{
+			GetQueryParam: func(key string) string {
+				return fakeEmail
+			},
+		})
+
+		var resBody []searchResBody
+		json.Unmarshal(res.Body, &resBody)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, []searchResBody{
+			{
+				ID: "1",
+				Name:  fakeName,
+				Email: fakeEmail,
+			},
+			{
+				ID: "2",
+				Name:  fakeName,
+				Email: fakeEmail,
+			},
+		}, resBody)
+	})
+}
