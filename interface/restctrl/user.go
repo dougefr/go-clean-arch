@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
-	"github.com/dougefr/go-clean-arch/usecase"
+	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
 	"github.com/google/uuid"
 	"net/http"
 	"strconv"
@@ -19,15 +19,15 @@ type User interface {
 }
 
 type user struct {
-	ucCreateUser usecase.CreateUser
-	ucSearchUser usecase.SearchUser
+	ucCreateUser usecase2.CreateUser
+	ucSearchUser usecase2.SearchUser
 	session      iinfra.Session
 	logger       iinfra.LogProvider
 }
 
 // NewUser ...
-func NewUser(ucCreateUser usecase.CreateUser,
-	ucSearchUser usecase.SearchUser,
+func NewUser(ucCreateUser usecase2.CreateUser,
+	ucSearchUser usecase2.SearchUser,
 	session iinfra.Session,
 	logger iinfra.LogProvider) User {
 	return user{
@@ -57,7 +57,7 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	ucReqModel := usecase.CreateUserRequestModel{
+	ucReqModel := usecase2.CreateUserRequestModel{
 		Name:  reqBody.Name,
 		Email: reqBody.Email,
 	}
@@ -71,7 +71,7 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 	ctx = context.WithValue(ctx, iinfra.ContextKeyTx, tx)
 	ucResModel, err := u.ucCreateUser.Execute(ctx, ucReqModel)
 	if err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when executing usecase: %v", err))
+		u.logger.Error(ctx, fmt.Sprintf("error when executing core: %v", err))
 		if err2 := u.session.RollbackTx(tx); err2 != nil {
 			u.logger.Error(ctx, fmt.Sprintf("error when rollbacking tx: %v", err2))
 			return respondError(err2)
@@ -119,12 +119,12 @@ func (u user) SearchUser(req RestRequest) (res RestResponse) {
 	})
 	u.logger.Debug(ctx, "starting create user")
 
-	var filter usecase.SearchUserRequestModel
+	var filter usecase2.SearchUserRequestModel
 	filter.Email = req.GetQueryParam("email")
 
 	ucResModel, err := u.ucSearchUser.Execute(ctx, filter)
 	if err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when executing usecase: %v", err))
+		u.logger.Error(ctx, fmt.Sprintf("error when executing core: %v", err))
 		return respondError(err)
 	}
 

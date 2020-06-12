@@ -1,7 +1,7 @@
 package restctrl
 
 import (
-	"github.com/dougefr/go-clean-arch/usecase"
+	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
 	"net/http"
 )
 
@@ -18,10 +18,10 @@ type RestResponse struct {
 }
 
 func respondError(err error) (res RestResponse) {
-	if be, ok := err.(usecase.BusinessError); ok {
+	if be, ok := err.(usecase2.BusinessError); ok {
 		res.Body = []byte(be.Error())
 		switch be {
-		case usecase.ErrCreateUserNotFound:
+		case usecase2.ErrCreateUserNotFound:
 			res.StatusCode = http.StatusNotFound
 		default:
 			res.StatusCode = http.StatusBadRequest

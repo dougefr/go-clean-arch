@@ -2,7 +2,7 @@ package igateway
 
 import (
 	"context"
-	"github.com/dougefr/go-clean-arch/entity"
+	"github.com/dougefr/go-clean-arch/core/entity"
 )
 
 // User ...

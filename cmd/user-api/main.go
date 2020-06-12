@@ -6,7 +6,7 @@ import (
 	"github.com/dougefr/go-clean-arch/infra"
 	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
-	"github.com/dougefr/go-clean-arch/usecase"
+	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
 	"github.com/gofiber/fiber"
 	"os"
 )
@@ -24,8 +24,8 @@ func main() {
 	}
 
 	userRepo := gateway.NewUserGateway(db, logger)
-	ucCreateUser := usecase.NewCreateUser(userRepo)
-	ucSearchUser := usecase.NewSearchUser(userRepo)
+	ucCreateUser := usecase2.NewCreateUser(userRepo)
+	ucSearchUser := usecase2.NewSearchUser(userRepo)
 	userController := restctrl.NewUser(ucCreateUser, ucSearchUser, db, logger)
 
 	app := fiber.New()
