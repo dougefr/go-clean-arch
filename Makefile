@@ -2,10 +2,13 @@
 
 path=./...
 
-setup:
+setup: .make.setup
+.make.setup:
 	GO111MODULE=off go get -u github.com/kyoh86/richgo
 	GO111MODULE=off go get -u golang.org/x/lint/golint
-	GO111MODULE=on go get github.com/golang/mock/mockgen@latest
+	GO111MODULE=off go get -u github.com/golang/mock/mockgen
+	GO111MODULE=off go get -u golang.org/x/tools/cmd/cover
+	touch .make.setup
 
 fmt:
 	go fmt $(path)
@@ -15,7 +18,12 @@ lint:
 	@echo "Golint found no problems on your code!"
 
 test: mock
-	go test $(path)
+	$(GOPATH)/bin/richgo test $(path) $(args)
+
+fullcover:
+	go test -coverprofile=cover.out $(path)
+	go tool cover -func=cover.out || true
+	rm cover.out
 
 run:
 	go run ./cmd/user-api/main.go
