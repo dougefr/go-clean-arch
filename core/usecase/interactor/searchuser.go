@@ -27,7 +27,7 @@ type (
 		Email string
 	}
 
-	// Search ...
+	// SearchUser ...
 	SearchUser interface {
 		Execute(ctx context.Context, filter SearchUserRequestModel) (SearchUserResponseModel, error)
 	}
