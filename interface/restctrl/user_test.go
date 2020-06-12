@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/core/usecase/interactor/mock_interactor"
-
 	"github.com/dougefr/go-clean-arch/interface/iinfra/mock_iinfra"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUser_Create(t *testing.T) {
+func TestUserCreate(t *testing.T) {
+	fakeError := errors.New("fake-error")
+
 	t.Run("should results in StatusInternalServerError if the request body is an invalid JSON", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -40,8 +40,7 @@ func TestUser_Create(t *testing.T) {
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 
 		session := mock_iinfra.NewMockSession(ctrl)
-		expectedErr := errors.New("fake-error")
-		session.EXPECT().BeginTx().Return(nil, expectedErr)
+		session.EXPECT().BeginTx().Return(nil, fakeError)
 
 		c := NewUser(nil, nil, session, logger)
 		res := c.Create(RestRequest{
@@ -64,8 +63,7 @@ func TestUser_Create(t *testing.T) {
 		session.EXPECT().RollbackTx(gomock.Any()).Return(nil)
 
 		ucCreateUser := mock_interactor.NewMockCreateUser(ctrl)
-		expectedErr := businesserr.ErrCreateUserAlreadyExists
-		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, expectedErr)
+		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, fakeError)
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
@@ -88,8 +86,7 @@ func TestUser_Create(t *testing.T) {
 		session.EXPECT().RollbackTx(gomock.Any()).Return(nil)
 
 		ucCreateUser := mock_interactor.NewMockCreateUser(ctrl)
-		expectedErr := errors.New("fake-error")
-		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, expectedErr)
+		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, fakeError)
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
@@ -109,8 +106,7 @@ func TestUser_Create(t *testing.T) {
 
 		session := mock_iinfra.NewMockSession(ctrl)
 		session.EXPECT().BeginTx().Return(mock_iinfra.NewMockTx(ctrl), nil)
-		expectedErr := errors.New("fake-error")
-		session.EXPECT().CommitTx(gomock.Any()).Return(expectedErr)
+		session.EXPECT().CommitTx(gomock.Any()).Return(fakeError)
 
 		ucCreateUser := mock_interactor.NewMockCreateUser(ctrl)
 		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, nil)
