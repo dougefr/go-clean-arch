@@ -16,6 +16,9 @@ import (
 )
 
 func TestUserCreate(t *testing.T) {
+	const fakeJSON = `{"name":"fake name","email":"fake@email.com"}`
+	const fakeName = "fake name"
+	const fakeEmail = "fake@email.com"
 	fakeError := errors.New("fake-error")
 
 	t.Run("should results in StatusInternalServerError if the request body is an invalid JSON", func(t *testing.T) {
@@ -46,7 +49,7 @@ func TestUserCreate(t *testing.T) {
 
 		c := NewUser(nil, nil, session, logger)
 		res := c.Create(RestRequest{
-			Body: []byte(`{"name":"fake name","email":"fake@email.com"}`),
+			Body: []byte(fakeJSON),
 		})
 
 		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
@@ -69,7 +72,7 @@ func TestUserCreate(t *testing.T) {
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
-			Body: []byte(`{"name":"fake name","email":"fake@email.com"}`),
+			Body: []byte(fakeJSON),
 		})
 
 		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
@@ -92,7 +95,7 @@ func TestUserCreate(t *testing.T) {
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
-			Body: []byte(`{"name":"fake name","email":"fake@email.com"}`),
+			Body: []byte(fakeJSON),
 		})
 
 		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
@@ -115,7 +118,7 @@ func TestUserCreate(t *testing.T) {
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
-			Body: []byte(`{"name":"fake name","email":"fake@email.com"}`),
+			Body: []byte(fakeJSON),
 		})
 
 		assert.Equal(t, http.StatusInternalServerError, res.StatusCode)
@@ -134,18 +137,18 @@ func TestUserCreate(t *testing.T) {
 
 		ucCreateUser := mock_interactor.NewMockCreateUser(ctrl)
 		ucCreateUser.EXPECT().Execute(gomock.Any(), interactor.CreateUserRequestModel{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}).
 			Return(interactor.CreateUserResponseModel{
 				ID:    1,
-				Name:  "fake name",
-				Email: "fake@email.com",
+				Name:  fakeName,
+				Email: fakeEmail,
 			}, nil)
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
-			Body: []byte(`{"name":"fake name","email":"fake@email.com"}`),
+			Body: []byte(fakeJSON),
 		})
 
 		var resBody createResBody
@@ -154,8 +157,8 @@ func TestUserCreate(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, createResBody{
 			ID:    "1",
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}, resBody)
 	})
 }

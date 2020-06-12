@@ -31,6 +31,9 @@ jobs:
     - name: Run tests
       run: make test
 
+    - name: Run fullcover
+      run: make fullcover
+
     - name: SonarCloud scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
