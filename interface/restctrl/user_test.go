@@ -225,12 +225,12 @@ func TestUserSearch(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, []searchResBody{
 			{
-				ID: "1",
+				ID:    "1",
 				Name:  fakeName,
 				Email: fakeEmail,
 			},
 			{
-				ID: "2",
+				ID:    "2",
 				Name:  fakeName,
 				Email: fakeEmail,
 			},
