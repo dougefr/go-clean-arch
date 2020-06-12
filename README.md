@@ -1,2 +1,2 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dougefr_go-clean-arch&metric=alert_status)](https://sonarcloud.io/dashboard?id=dougefr_go-clean-arch)
-![Build](https://github.com/dougefr/go-clean-arch/workflows/Go/badge.svg)
+![user-api](https://github.com/dougefr/go-clean-arch/workflows/user-api/badge.svg)
