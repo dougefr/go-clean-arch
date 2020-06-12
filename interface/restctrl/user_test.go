@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
+
 	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/core/usecase/interactor/mock_interactor"
 	"github.com/dougefr/go-clean-arch/interface/iinfra/mock_iinfra"
@@ -63,7 +65,7 @@ func TestUserCreate(t *testing.T) {
 		session.EXPECT().RollbackTx(gomock.Any()).Return(nil)
 
 		ucCreateUser := mock_interactor.NewMockCreateUser(ctrl)
-		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, fakeError)
+		ucCreateUser.EXPECT().Execute(gomock.Any(), gomock.Any()).Return(interactor.CreateUserResponseModel{}, businesserr.ErrCreateUserErrEmptyEmail)
 
 		c := NewUser(ucCreateUser, nil, session, logger)
 		res := c.Create(RestRequest{
