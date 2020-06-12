@@ -15,6 +15,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+const errorExecutingQuery = "error when executing query: %v"
+
 type userGateway struct {
 	db     iinfra.Database
 	logger iinfra.LogProvider
@@ -33,7 +35,7 @@ func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity
 	var rows *sql.Rows
 	rows, err = u.db.Query(ctx, "SELECT id, name, email FROM users WHERE email = ?", email)
 	if err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when executing query: %v", err), iinfra.LogAttrs{"email": email})
+		u.logger.Error(ctx, fmt.Sprintf(errorExecutingQuery, err), iinfra.LogAttrs{"email": email})
 		return
 	}
 
@@ -57,7 +59,7 @@ func (u userGateway) Create(ctx context.Context, user entity.User) (userCreated 
 
 	result, err := u.db.Exec(ctx, "INSERT INTO users (name, email) VALUES (?, ?)", user.Name, user.Email)
 	if err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when executing query: %v", err), iinfra.LogAttrs{"user": user})
+		u.logger.Error(ctx, fmt.Sprintf(errorExecutingQuery, err), iinfra.LogAttrs{"user": user})
 		return
 	}
 
@@ -83,7 +85,7 @@ func (u userGateway) FindAll(ctx context.Context) (users []entity.User, err erro
 	var rows *sql.Rows
 	rows, err = u.db.Query(ctx, "SELECT id, name, email FROM users")
 	if err != nil {
-		u.logger.Error(ctx, fmt.Sprintf("error when executing query: %v", err))
+		u.logger.Error(ctx, fmt.Sprintf(errorExecutingQuery, err))
 		return
 	}
 

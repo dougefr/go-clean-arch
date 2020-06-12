@@ -12,7 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSearchUser_Execute(t *testing.T) {
+func TestSearchUserExecute(t *testing.T) {
+	const fakeEmail = "fake@email.com"
+
 	t.Run("should return an error if an error was returned when finding all users", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -33,10 +35,10 @@ func TestSearchUser_Execute(t *testing.T) {
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
 		expectedErr := errors.New("fake-error")
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, expectedErr)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, expectedErr)
 
 		uc := NewSearchUser(userGateway)
-		_, err := uc.Execute(context.Background(), SearchUserRequestModel{Email: "fake@email.com"})
+		_, err := uc.Execute(context.Background(), SearchUserRequestModel{Email: fakeEmail})
 
 		assert.True(t, errors.Is(err, expectedErr))
 	})
@@ -46,10 +48,10 @@ func TestSearchUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 
 		uc := NewSearchUser(userGateway)
-		result, _ := uc.Execute(context.Background(), SearchUserRequestModel{Email: "fake@email.com"})
+		result, _ := uc.Execute(context.Background(), SearchUserRequestModel{Email: fakeEmail})
 
 		assert.Empty(t, result.Users)
 	})
@@ -96,21 +98,21 @@ func TestSearchUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{
 			ID:    1,
 			Name:  "fake name",
-			Email: "fake@email.com",
+			Email: fakeEmail,
 		}, nil)
 
 		uc := NewSearchUser(userGateway)
-		result, _ := uc.Execute(context.Background(), SearchUserRequestModel{Email: "fake@email.com"})
+		result, _ := uc.Execute(context.Background(), SearchUserRequestModel{Email: fakeEmail})
 
 		assert.Equal(t, SearchUserResponseModel{
 			Users: []SearchUserResponseModelUser{
 				{
 					ID:    1,
 					Name:  "fake name",
-					Email: "fake@email.com",
+					Email: fakeEmail,
 				},
 			},
 		}, result)

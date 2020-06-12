@@ -12,7 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateUser_Execute(t *testing.T) {
+func TestCreateUserExecute(t *testing.T) {
+	const fakeEmail = "fake@email.com"
+	const fakeName = "fake name"
+
 	t.Run("should return an error ErrCreateUserErrEmptyName when user name is empty", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -21,7 +24,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Email: "fake@email.com",
+			Email: fakeEmail,
 		})
 
 		assert.EqualError(t, err, businesserr.ErrCreateUserErrEmptyName.Error())
@@ -35,7 +38,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name: "fake name",
+			Name: fakeName,
 		})
 
 		assert.EqualError(t, err, businesserr.ErrCreateUserErrEmptyEmail.Error())
@@ -47,12 +50,12 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
 		expectedErr := errors.New("fake-error")
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, expectedErr)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, expectedErr)
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		})
 
 		assert.True(t, errors.Is(err, expectedErr))
@@ -63,12 +66,12 @@ func TestCreateUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, nil)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, nil)
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		})
 
 		assert.EqualError(t, err, businesserr.ErrCreateUserAlreadyExists.Error())
@@ -80,16 +83,16 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
 		expectedErr := errors.New("fake-error")
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 		userGateway.EXPECT().Create(context.Background(), entity.User{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}).Return(entity.User{}, expectedErr)
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		})
 
 		assert.True(t, errors.Is(err, expectedErr))
@@ -100,26 +103,26 @@ func TestCreateUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), fakeEmail).Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 		userGateway.EXPECT().Create(context.Background(), entity.User{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}).Return(entity.User{
 			ID:    1,
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}, nil)
 
 		uc := NewCreateUser(userGateway)
 		responseModel, _ := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		})
 
 		assert.Equal(t, CreateUserResponseModel{
 			ID:    1,
-			Name:  "fake name",
-			Email: "fake@email.com",
+			Name:  fakeName,
+			Email: fakeEmail,
 		}, responseModel)
 	})
 }
