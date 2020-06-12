@@ -31,7 +31,7 @@ jobs:
     - name: Run tests
       run: make test
 
-    - name: SonarCloud Scan
+    - name: SonarCloud scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
