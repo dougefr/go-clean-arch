@@ -11,6 +11,9 @@ setup: .make.setup
 	GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
 	touch .make.setup
 
+deps:
+	go get -v -t -d $(path)
+
 fmt: setup
 	go fmt $(path)
 	find . -name \*.go -exec goimports -w {} \;
