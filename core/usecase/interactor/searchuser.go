@@ -1,10 +1,11 @@
-package usecase
+package interactor
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/core/entity"
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
 )
 
@@ -66,7 +67,7 @@ func (c searchUser) findAll(ctx context.Context) (response SearchUserResponseMod
 func (c searchUser) findByEmail(ctx context.Context, email string) (response SearchUserResponseModel, err error) {
 	var user entity.User
 	user, err = c.userGateway.FindByEmail(ctx, email)
-	if errors.Is(err, ErrCreateUserNotFound) {
+	if errors.Is(err, businesserr.ErrCreateUserNotFound) {
 		err = nil
 		response.Users = make([]SearchUserResponseModelUser, 0)
 		return

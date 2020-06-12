@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/dougefr/go-clean-arch/core/usecase"
+	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/infra"
 	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
@@ -24,8 +24,8 @@ func main() {
 	}
 
 	userRepo := gateway.NewUserGateway(db, logger)
-	ucCreateUser := usecase.NewCreateUser(userRepo)
-	ucSearchUser := usecase.NewSearchUser(userRepo)
+	ucCreateUser := interactor.NewCreateUser(userRepo)
+	ucSearchUser := interactor.NewSearchUser(userRepo)
 	userController := restctrl.NewUser(ucCreateUser, ucSearchUser, db, logger)
 
 	app := fiber.New()

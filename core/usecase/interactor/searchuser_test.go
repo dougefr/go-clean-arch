@@ -1,9 +1,10 @@
-package usecase
+package interactor
 
 import (
 	"context"
 	"errors"
 	"github.com/dougefr/go-clean-arch/core/entity"
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway/mock_igateway"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -44,7 +45,7 @@ func TestSearchUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 
 		uc := NewSearchUser(userGateway)
 		result, _ := uc.Execute(context.Background(), SearchUserRequestModel{Email: "fake@email.com"})

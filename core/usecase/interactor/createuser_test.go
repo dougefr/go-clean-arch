@@ -1,9 +1,10 @@
-package usecase
+package interactor
 
 import (
 	"context"
 	"errors"
 	"github.com/dougefr/go-clean-arch/core/entity"
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway/mock_igateway"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +23,7 @@ func TestCreateUser_Execute(t *testing.T) {
 			Email: "fake@email.com",
 		})
 
-		assert.EqualError(t, err, ErrCreateUserErrEmptyName.Error())
+		assert.EqualError(t, err, businesserr.ErrCreateUserErrEmptyName.Error())
 	})
 
 	t.Run("should return an error ErrCreateUserErrEmptyEmail when user email is empty", func(t *testing.T) {
@@ -36,7 +37,7 @@ func TestCreateUser_Execute(t *testing.T) {
 			Name: "fake name",
 		})
 
-		assert.EqualError(t, err, ErrCreateUserErrEmptyEmail.Error())
+		assert.EqualError(t, err, businesserr.ErrCreateUserErrEmptyEmail.Error())
 	})
 
 	t.Run("should return an unknown error when occur an error when checking if there is no user if the same email", func(t *testing.T) {
@@ -69,7 +70,7 @@ func TestCreateUser_Execute(t *testing.T) {
 			Email: "fake@email.com",
 		})
 
-		assert.EqualError(t, err, ErrCreateUserAlreadyExists.Error())
+		assert.EqualError(t, err, businesserr.ErrCreateUserAlreadyExists.Error())
 	})
 
 	t.Run("should return an unknown error when occur an error when creating an user", func(t *testing.T) {
@@ -78,7 +79,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
 		expectedErr := errors.New("fake-error")
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 		userGateway.EXPECT().Create(context.Background(), entity.User{
 			Name:  "fake name",
 			Email: "fake@email.com",
@@ -98,7 +99,7 @@ func TestCreateUser_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		userGateway := mock_igateway.NewMockUser(ctrl)
-		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, ErrCreateUserNotFound)
+		userGateway.EXPECT().FindByEmail(context.Background(), "fake@email.com").Return(entity.User{}, businesserr.ErrCreateUserNotFound)
 		userGateway.EXPECT().Create(context.Background(), entity.User{
 			Name:  "fake name",
 			Email: "fake@email.com",

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/usecase"
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	"time"
@@ -43,7 +43,7 @@ func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity
 			return
 		}
 	} else {
-		err = usecase.ErrCreateUserNotFound
+		err = businesserr.ErrCreateUserNotFound
 	}
 
 	return

@@ -1,10 +1,11 @@
-package usecase
+package interactor
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"github.com/dougefr/go-clean-arch/core/entity"
+	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
 	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
 )
 
@@ -42,20 +43,20 @@ func NewCreateUser(userGateway igateway.User) CreateUser {
 func (c createUser) Execute(ctx context.Context,
 	user CreateUserRequestModel) (response CreateUserResponseModel, err error) {
 	if user.Name == "" {
-		err = ErrCreateUserErrEmptyName
+		err = businesserr.ErrCreateUserErrEmptyName
 		return
 	}
 	if user.Email == "" {
-		err = ErrCreateUserErrEmptyEmail
+		err = businesserr.ErrCreateUserErrEmptyEmail
 		return
 	}
 
-	if _, err = c.userGateway.FindByEmail(ctx, user.Email); err != nil && !errors.Is(err, ErrCreateUserNotFound) {
+	if _, err = c.userGateway.FindByEmail(ctx, user.Email); err != nil && !errors.Is(err, businesserr.ErrCreateUserNotFound) {
 		err = fmt.Errorf("find by email: %w", err)
 		return
 	}
 	if err == nil {
-		err = ErrCreateUserAlreadyExists
+		err = businesserr.ErrCreateUserAlreadyExists
 		return
 	}
 
