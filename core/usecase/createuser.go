@@ -22,7 +22,7 @@ type (
 		Email string
 	}
 
-	// CreateUser ...
+	// Create ...
 	CreateUser interface {
 		Execute(ctx context.Context, user CreateUserRequestModel) (CreateUserResponseModel, error)
 	}

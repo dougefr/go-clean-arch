@@ -49,7 +49,7 @@ func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity
 	return
 }
 
-// CreateUser ...
+// Create ...
 func (u userGateway) Create(ctx context.Context, user entity.User) (userCreated entity.User, err error) {
 	startTime := time.Now()
 	u.logger.Debug(ctx, "starting create user method")

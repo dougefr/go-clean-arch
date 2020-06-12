@@ -29,8 +29,8 @@ func main() {
 	userController := restctrl.NewUser(ucCreateUser, ucSearchUser, db, logger)
 
 	app := fiber.New()
-	app.Post("/user", do(userController.CreateUser))
-	app.Get("/user", do(userController.SearchUser))
+	app.Post("/user", do(userController.Create))
+	app.Get("/user", do(userController.Search))
 
 	logger.Info(context.Background(), "listening to port 8080...")
 	if err = app.Listen(8080); err != nil {

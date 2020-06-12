@@ -49,7 +49,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name: "fake name",
+			Name:  "fake name",
 			Email: "fake@email.com",
 		})
 
@@ -65,7 +65,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name: "fake name",
+			Name:  "fake name",
 			Email: "fake@email.com",
 		})
 
@@ -86,7 +86,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		_, err := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name: "fake name",
+			Name:  "fake name",
 			Email: "fake@email.com",
 		})
 
@@ -110,7 +110,7 @@ func TestCreateUser_Execute(t *testing.T) {
 
 		uc := NewCreateUser(userGateway)
 		responseModel, _ := uc.Execute(context.Background(), CreateUserRequestModel{
-			Name: "fake name",
+			Name:  "fake name",
 			Email: "fake@email.com",
 		})
 

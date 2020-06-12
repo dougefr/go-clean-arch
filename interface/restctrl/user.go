@@ -13,17 +13,36 @@ import (
 )
 
 // User ...
-type User interface {
-	CreateUser(req RestRequest) RestResponse
-	SearchUser(req RestRequest) RestResponse
-}
+type (
+	User interface {
+		Create(req RestRequest) RestResponse
+		Search(req RestRequest) RestResponse
+	}
 
-type user struct {
-	ucCreateUser usecase.CreateUser
-	ucSearchUser usecase.SearchUser
-	session      iinfra.Session
-	logger       iinfra.LogProvider
-}
+	user struct {
+		ucCreateUser usecase.CreateUser
+		ucSearchUser usecase.SearchUser
+		session      iinfra.Session
+		logger       iinfra.LogProvider
+	}
+
+	createReqBody struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+
+	createResBody struct {
+		ID    string `json:"id"`
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+
+	searchResBody struct {
+		ID    string `json:"id"`
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+)
 
 // NewUser ...
 func NewUser(ucCreateUser usecase.CreateUser,
@@ -38,18 +57,15 @@ func NewUser(ucCreateUser usecase.CreateUser,
 	}
 }
 
-// CreateUser ...
-func (u user) CreateUser(req RestRequest) (res RestResponse) {
+// Create ...
+func (u user) Create(req RestRequest) (res RestResponse) {
 	startTime := time.Now()
 	ctx := context.WithValue(context.Background(), iinfra.ContextKeyGlobalLogAttrs, iinfra.LogAttrs{
 		"request-id": uuid.New(),
 	})
 	u.logger.Debug(ctx, "starting create user")
 
-	var reqBody struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}
+	var reqBody createReqBody
 
 	var err error
 	if err = json.Unmarshal(req.Body, &reqBody); err != nil {
@@ -79,11 +95,7 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	var resBody struct {
-		ID    string `json:"id"`
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}
+	var resBody createResBody
 	resBody.ID = strconv.FormatInt(ucResModel.ID, 10)
 	resBody.Name = ucResModel.Name
 	resBody.Email = ucResModel.Email
@@ -111,8 +123,8 @@ func (u user) CreateUser(req RestRequest) (res RestResponse) {
 	return
 }
 
-// SearchUser ...
-func (u user) SearchUser(req RestRequest) (res RestResponse) {
+// Search ...
+func (u user) Search(req RestRequest) (res RestResponse) {
 	startTime := time.Now()
 	ctx := context.WithValue(context.Background(), iinfra.ContextKeyGlobalLogAttrs, iinfra.LogAttrs{
 		"request-id": uuid.New(),
@@ -128,11 +140,7 @@ func (u user) SearchUser(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	type resBodyType struct {
-		ID    string `json:"id"`
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}
+	type resBodyType searchResBody
 	var resBody []resBodyType
 	for _, modelUser := range ucResModel.Users {
 		resBody = append(resBody, resBodyType{
