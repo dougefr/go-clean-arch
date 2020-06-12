@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
 	"github.com/dougefr/go-clean-arch/infra"
 	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
-	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
 	"github.com/gofiber/fiber"
 	"os"
 )

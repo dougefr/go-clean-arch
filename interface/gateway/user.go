@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	"github.com/dougefr/go-clean-arch/core/entity"
 	"github.com/dougefr/go-clean-arch/core/igateway"
 	usecase2 "github.com/dougefr/go-clean-arch/core/usecase"
+	"github.com/dougefr/go-clean-arch/interface/iinfra"
 	"time"
 
 	// sqlite
