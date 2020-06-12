@@ -14,6 +14,9 @@ lint:
 	$(GOPATH)/bin/golint -set_exit_status -min_confidence 0.9 $(path)
 	@echo "Golint found no problems on your code!"
 
+test: mock
+	go test $(path)
+
 run:
 	go run ./cmd/user-api/main.go
 

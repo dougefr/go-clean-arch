@@ -5,6 +5,9 @@ import (
 	"database/sql"
 )
 
+// ContextKeyTx ...
+const ContextKeyTx string = "ContextKeyTx"
+
 type (
 	// Tx ...
 	Tx interface{}
