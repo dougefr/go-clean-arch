@@ -12,15 +12,15 @@ type (
 	}
 
 	businessError struct {
-		error  string
-		code string
+		error string
+		code  string
 	}
 )
 
 func newBusinessError(code, error string) BusinessError {
 	return businessError{
-		error:  error,
-		code: code,
+		error: error,
+		code:  code,
 	}
 }
 
@@ -34,7 +34,7 @@ func (b businessError) Code() string {
 	return b.code
 }
 
-// Business errors that use cases interactor can results
+// Business errors that use cases interactor can result
 var (
 	// ErrCreateUserNotFound ...
 	ErrCreateUserNotFound = newBusinessError("ErrCreateUserNotFound", "not found")

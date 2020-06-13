@@ -59,7 +59,8 @@ func (c createUser) Execute(ctx context.Context,
 	}
 
 	// Check if an user exists with the same email
-	if _, err = c.userGateway.FindByEmail(ctx, user.Email); err != nil && !errors.Is(err, businesserr.ErrCreateUserNotFound) {
+	if _, err = c.userGateway.FindByEmail(ctx, user.Email); err != nil &&
+		!errors.Is(err, businesserr.ErrCreateUserNotFound) {
 		err = fmt.Errorf("find by email: %w", err)
 		return
 	}

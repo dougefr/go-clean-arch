@@ -19,6 +19,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+// default error when query execution fails
 const errorExecutingQuery = "error when executing query: %v"
 
 type userGateway struct {
@@ -47,12 +48,15 @@ func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity
 	}
 
 	if rows.Next() {
+		// get just the first line
 		err = rows.Scan(&user.ID, &user.Name, &user.Email)
 		if err != nil {
-			u.logger.Error(ctx, fmt.Sprintf("error when scanning query result: %v", err), iinfra.LogAttrs{"email": email})
+			u.logger.Error(ctx, fmt.Sprintf("error when scanning query result: %v", err),
+				iinfra.LogAttrs{"email": email})
 			return
 		}
 	} else {
+		// will return an error if the user does not exists
 		err = businesserr.ErrCreateUserNotFound
 	}
 
@@ -74,6 +78,7 @@ func (u userGateway) Create(ctx context.Context, user entity.User) (userCreated 
 		return
 	}
 
+	// get the ID of the user that was created
 	id, err := result.LastInsertId()
 	if err != nil {
 		u.logger.Error(ctx, fmt.Sprintf("error when getting last insert ID: %v", err), iinfra.LogAttrs{"user": user})

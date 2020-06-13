@@ -31,17 +31,20 @@ type (
 		logger       iinfra.LogProvider
 	}
 
+	// create user request body
 	createReqBody struct {
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
 
+	// create user response body
 	createResBody struct {
 		ID    string `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
 
+	// search user response body
 	searchResBody struct {
 		ID    string `json:"id"`
 		Name  string `json:"name"`
@@ -89,7 +92,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 		return respondError(err)
 	}
 
-	ctx = context.WithValue(ctx, iinfra.ContextKeyTx, tx)
+	ctx = context.WithValue(ctx, iinfra.ContextKeyTx, tx) // add Tx to context to be use in gateways
 	ucResModel, err := u.ucCreateUser.Execute(ctx, ucReqModel)
 	if err != nil {
 		u.logger.Error(ctx, fmt.Sprintf("error when executing core: %v", err))
@@ -98,7 +101,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 	}
 
 	var resBody createResBody
-	resBody.ID = strconv.FormatInt(ucResModel.ID, 10)
+	resBody.ID = strconv.FormatInt(ucResModel.ID, 10) // format to string because int64 can be too big to JS
 	resBody.Name = ucResModel.Name
 	resBody.Email = ucResModel.Email
 
@@ -125,6 +128,7 @@ func (u user) Search(req RestRequest) (res RestResponse) {
 	})
 	u.logger.Debug(ctx, "starting create user")
 
+	// get filters from query param
 	var filter interactor.SearchUserRequestModel
 	filter.Email = req.GetQueryParam("email")
 
