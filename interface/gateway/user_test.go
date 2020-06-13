@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -125,6 +126,100 @@ func TestUserGatewayFindByEmail(t *testing.T) {
 
 		g := NewUserGateway(database, logger)
 		user, _ := g.FindByEmail(context.Background(), fakeEmail)
+		assert.Equal(t, entity.User{
+			ID:    1,
+			Name:  fakeName,
+			Email: fakeEmail,
+		}, user)
+	})
+}
+
+func TestUserGatewayCreate(t *testing.T) {
+	query := regexp.QuoteMeta("INSERT INTO users (name, email) VALUES (?, ?)")
+	const fakeName = "fake name"
+	const fakeEmail = "fake@email.com"
+	fakeError := errors.New("fake error")
+
+	t.Run("should return an error if the query results in an error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		db, mock, err := sqlmock.New()
+		require.Nil(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(query).WithArgs(fakeName, fakeEmail).WillReturnError(fakeError)
+
+		logger := mock_iinfra.NewMockLogProvider(ctrl)
+		logger.EXPECT().Error(gomock.Any(), gomock.Any(), gomock.Any())
+		logger.EXPECT().Debug(gomock.Any(), gomock.Any(), gomock.Any())
+
+		database := mock_iinfra.NewMockDatabase(ctrl)
+		database.EXPECT().Exec(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+			func(_ context.Context, query string, args ...interface{}) (sql.Result, error) {
+				return db.Exec(query, args...)
+			})
+
+		g := NewUserGateway(database, logger)
+		_, err = g.Create(context.Background(), entity.User{
+			Name:  fakeName,
+			Email: fakeEmail,
+		})
+		assert.EqualError(t, err, fakeError.Error())
+	})
+
+	t.Run("should return an error if occur an error when getting last inserted ID ", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		db, mock, err := sqlmock.New()
+		require.Nil(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(query).WithArgs(fakeName, fakeEmail).WillReturnResult(sqlmock.NewErrorResult(fakeError))
+
+		logger := mock_iinfra.NewMockLogProvider(ctrl)
+		logger.EXPECT().Error(gomock.Any(), gomock.Any(), gomock.Any())
+		logger.EXPECT().Debug(gomock.Any(), gomock.Any(), gomock.Any())
+
+		database := mock_iinfra.NewMockDatabase(ctrl)
+		database.EXPECT().Exec(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+			func(_ context.Context, query string, args ...interface{}) (sql.Result, error) {
+				return db.Exec(query, args...)
+			})
+
+		g := NewUserGateway(database, logger)
+		_, err = g.Create(context.Background(), entity.User{
+			Name:  fakeName,
+			Email: fakeEmail,
+		})
+		assert.EqualError(t, err, fakeError.Error())
+	})
+
+	t.Run("should return the user created with inserted ID if everything goes fine", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		db, mock, err := sqlmock.New()
+		require.Nil(t, err)
+		defer db.Close()
+
+		mock.ExpectExec(query).WithArgs(fakeName, fakeEmail).WillReturnResult(sqlmock.NewResult(1, 1))
+
+		logger := mock_iinfra.NewMockLogProvider(ctrl)
+		logger.EXPECT().Debug(gomock.Any(), gomock.Any(), gomock.Any()).Times(2)
+
+		database := mock_iinfra.NewMockDatabase(ctrl)
+		database.EXPECT().Exec(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+			func(_ context.Context, query string, args ...interface{}) (sql.Result, error) {
+				return db.Exec(query, args...)
+			})
+
+		g := NewUserGateway(database, logger)
+		user, _ := g.Create(context.Background(), entity.User{
+			Name:  fakeName,
+			Email: fakeEmail,
+		})
 		assert.Equal(t, entity.User{
 			ID:    1,
 			Name:  fakeName,
