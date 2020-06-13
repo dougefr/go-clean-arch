@@ -11,16 +11,18 @@ import (
 )
 
 // RestRequest ...
-type RestRequest struct {
-	GetQueryParam func(key string) string
-	Body          []byte
-}
+type (
+	RestRequest struct {
+		GetQueryParam func(key string) string
+		Body          []byte
+	}
 
-// RestResponse ...
-type RestResponse struct {
-	Body       []byte
-	StatusCode int
-}
+	// RestResponse ...
+	RestResponse struct {
+		Body       []byte
+		StatusCode int
+	}
+)
 
 func respondError(err error) (res RestResponse) {
 	if be, ok := err.(businesserr.BusinessError); ok {
