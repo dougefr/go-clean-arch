@@ -81,7 +81,7 @@ func mergeAttrs(attrs []iinfra.LogAttrs) (attr map[string]interface{}) {
 	attr = make(iinfra.LogAttrs)
 
 	if attrs == nil {
-		return
+		return // empty attrs
 	}
 
 	for _, a := range attrs {
