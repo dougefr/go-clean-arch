@@ -1,6 +1,8 @@
-// Copyright (c) 2020. Douglas Rodrigues - All rights reserved.
-// This file is licensed under the MIT License.
-// License text available at https://opensource.org/licenses/MIT
+/*
+ * Copyright (c) 2020. Douglas Rodrigues - All rights reserved.
+ * This file is licensed under the MIT License.
+ * License text available at https://opensource.org/licenses/MIT
+ */
 
 package gateway
 
