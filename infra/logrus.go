@@ -26,7 +26,7 @@ func NewLogrus(logLevel string) (l iinfra.LogProvider, err error) {
 
 	logger := log.New()
 	logger.SetLevel(level)
-	logger.SetFormatter(&log.JSONFormatter{})
+	logger.SetFormatter(&log.JSONFormatter{}) // set JSON formatter as default formatter
 	l = loggerProvider{
 		l: logger,
 	}
@@ -37,10 +37,7 @@ func NewLogrus(logLevel string) (l iinfra.LogProvider, err error) {
 func (l loggerProvider) Info(ctx context.Context, message string, attrs ...iinfra.LogAttrs) {
 	if l.l.IsLevelEnabled(log.InfoLevel) {
 		go func() {
-			if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
-				attrs = append(attrs, a)
-			}
-
+			attrs = appendGlobalAttrs(ctx, attrs)
 			attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
 			l.l.WithFields(mergeAttrs(attrs)).Info(message)
 		}()
@@ -49,10 +46,7 @@ func (l loggerProvider) Info(ctx context.Context, message string, attrs ...iinfr
 
 func (l loggerProvider) Error(ctx context.Context, message string, attrs ...iinfra.LogAttrs) {
 	if l.l.IsLevelEnabled(log.ErrorLevel) {
-		if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
-			attrs = append(attrs, a)
-		}
-
+		attrs = appendGlobalAttrs(ctx, attrs)
 		attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
 		l.l.WithFields(mergeAttrs(attrs)).Error(message)
 	}
@@ -60,10 +54,7 @@ func (l loggerProvider) Error(ctx context.Context, message string, attrs ...iinf
 
 func (l loggerProvider) Debug(ctx context.Context, message string, attrs ...iinfra.LogAttrs) {
 	if l.l.IsLevelEnabled(log.DebugLevel) {
-		if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
-			attrs = append(attrs, a)
-		}
-
+		attrs = appendGlobalAttrs(ctx, attrs)
 		attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
 		l.l.WithFields(mergeAttrs(attrs)).Debug(message)
 	}
@@ -71,15 +62,21 @@ func (l loggerProvider) Debug(ctx context.Context, message string, attrs ...iinf
 
 func (l loggerProvider) Warn(ctx context.Context, message string, attrs ...iinfra.LogAttrs) {
 	if l.l.IsLevelEnabled(log.WarnLevel) {
-		if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
-			attrs = append(attrs, a)
-		}
-
+		attrs = appendGlobalAttrs(ctx, attrs)
 		attrs = append(attrs, iinfra.LogAttrs{"func": trace()})
 		l.l.WithFields(mergeAttrs(attrs)).Warn(message)
 	}
 }
 
+// appendGlobalAttrs get global attrs from the context
+func appendGlobalAttrs(ctx context.Context, attrs []iinfra.LogAttrs) []iinfra.LogAttrs {
+	if a, ok := ctx.Value(iinfra.ContextKeyGlobalLogAttrs).(iinfra.LogAttrs); ok {
+		attrs = append(attrs, a)
+	}
+	return attrs
+}
+
+// mergeAttrs merge all attrs in just one map
 func mergeAttrs(attrs []iinfra.LogAttrs) (attr map[string]interface{}) {
 	attr = make(iinfra.LogAttrs)
 
@@ -96,6 +93,7 @@ func mergeAttrs(attrs []iinfra.LogAttrs) (attr map[string]interface{}) {
 	return
 }
 
+// get the name of the function to be logged
 func trace() string {
 	pc := make([]uintptr, 10)
 	runtime.Callers(2, pc)

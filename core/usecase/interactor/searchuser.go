@@ -51,7 +51,7 @@ func NewSearchUser(userGateway igateway.User) SearchUser {
 
 func (c searchUser) Execute(ctx context.Context,
 	filter SearchUserRequestModel) (response SearchUserResponseModel, err error) {
-	if filter.Email == "" {
+	if filter.Email == "" { // if email filter was not informed, find all users
 		return c.findAll(ctx)
 	}
 
