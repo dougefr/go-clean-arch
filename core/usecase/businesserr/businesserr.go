@@ -4,10 +4,6 @@
 
 package businesserr
 
-import (
-	"errors"
-)
-
 type (
 	// BusinessError ...
 	BusinessError interface {
@@ -16,26 +12,29 @@ type (
 	}
 
 	businessError struct {
-		err  error
+		error  string
 		code string
 	}
 )
 
 func newBusinessError(code, error string) BusinessError {
 	return businessError{
-		err:  errors.New(error),
+		error:  error,
 		code: code,
 	}
 }
 
+// Error ...
 func (b businessError) Error() string {
-	return b.err.Error()
+	return b.error
 }
 
+// Code ...
 func (b businessError) Code() string {
 	return b.code
 }
 
+// Business errors that use cases interactor can results
 var (
 	// ErrCreateUserNotFound ...
 	ErrCreateUserNotFound = newBusinessError("ErrCreateUserNotFound", "not found")

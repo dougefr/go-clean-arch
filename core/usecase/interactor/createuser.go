@@ -45,8 +45,10 @@ func NewCreateUser(userGateway igateway.User) CreateUser {
 	}
 }
 
+// Execute ...
 func (c createUser) Execute(ctx context.Context,
 	user CreateUserRequestModel) (response CreateUserResponseModel, err error) {
+	// Static validations
 	if user.Name == "" {
 		err = businesserr.ErrCreateUserErrEmptyName
 		return
@@ -56,6 +58,7 @@ func (c createUser) Execute(ctx context.Context,
 		return
 	}
 
+	// Check if an user exists with the same email
 	if _, err = c.userGateway.FindByEmail(ctx, user.Email); err != nil && !errors.Is(err, businesserr.ErrCreateUserNotFound) {
 		err = fmt.Errorf("find by email: %w", err)
 		return
@@ -65,6 +68,7 @@ func (c createUser) Execute(ctx context.Context,
 		return
 	}
 
+	// Create the user
 	userCreated, err := c.userGateway.Create(ctx, entity.User{
 		Name:  user.Name,
 		Email: user.Email,
