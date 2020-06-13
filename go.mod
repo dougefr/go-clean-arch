@@ -3,6 +3,7 @@ module github.com/dougefr/go-clean-arch
 go 1.14
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.1
 	github.com/gofiber/fiber v1.9.6
 	github.com/golang/mock v1.4.3
 	github.com/google/uuid v1.1.1

@@ -36,6 +36,9 @@ func NewUserGateway(db iinfra.Database, logger iinfra.LogProvider) igateway.User
 
 // FindByEmail ...
 func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity.User, err error) {
+	startTime := time.Now()
+	u.logger.Debug(ctx, "starting find by email method")
+
 	var rows *sql.Rows
 	rows, err = u.db.Query(ctx, "SELECT id, name, email FROM users WHERE email = ?", email)
 	if err != nil {
@@ -52,6 +55,10 @@ func (u userGateway) FindByEmail(ctx context.Context, email string) (user entity
 	} else {
 		err = businesserr.ErrCreateUserNotFound
 	}
+
+	u.logger.Debug(ctx, "ending find by email method", iinfra.LogAttrs{
+		"duration": time.Since(startTime),
+	})
 
 	return
 }
