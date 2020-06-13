@@ -98,6 +98,9 @@ func (u userGateway) Create(ctx context.Context, user entity.User) (userCreated 
 
 // FindAll ...
 func (u userGateway) FindAll(ctx context.Context) (users []entity.User, err error) {
+	startTime := time.Now()
+	u.logger.Debug(ctx, "starting find all users method")
+
 	var rows *sql.Rows
 	rows, err = u.db.Query(ctx, "SELECT id, name, email FROM users")
 	if err != nil {
@@ -115,6 +118,10 @@ func (u userGateway) FindAll(ctx context.Context) (users []entity.User, err erro
 
 		users = append(users, user)
 	}
+
+	u.logger.Debug(ctx, "ending find all users method", iinfra.LogAttrs{
+		"duration": time.Since(startTime),
+	})
 
 	return
 }
