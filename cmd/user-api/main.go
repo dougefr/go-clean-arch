@@ -16,6 +16,7 @@ import (
 	"github.com/gofiber/fiber"
 )
 
+// user-api entrypoint
 func main() {
 	db, err := infra.NewSQLite3()
 	if err != nil {
@@ -44,6 +45,7 @@ func main() {
 	}
 }
 
+// translates the rest ctrl results to fiber standards
 func do(fn func(restctrl.RestRequest) restctrl.RestResponse) func(ctx *fiber.Ctx) {
 	return func(ctx *fiber.Ctx) {
 		var req restctrl.RestRequest
@@ -51,7 +53,7 @@ func do(fn func(restctrl.RestRequest) restctrl.RestResponse) func(ctx *fiber.Ctx
 		req.GetQueryParam = func(key string) string {
 			return ctx.Query(key)
 		}
-		resp := fn(req)
+		resp := fn(req) // execute the controller function
 		ctx.Status(resp.StatusCode).SendBytes(resp.Body)
 	}
 }
