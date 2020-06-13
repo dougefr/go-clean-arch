@@ -74,9 +74,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 	u.logger.Debug(ctx, "starting create user")
 
 	var reqBody createReqBody
-
-	var err error
-	if err = json.Unmarshal(req.Body, &reqBody); err != nil {
+	if err := json.Unmarshal(req.Body, &reqBody); err != nil {
 		u.logger.Error(ctx, fmt.Sprintf("error when unmarshalling request body: %v", err))
 		return respondError(err)
 	}
@@ -106,7 +104,7 @@ func (u user) Create(req RestRequest) (res RestResponse) {
 	resBody.Email = ucResModel.Email
 
 	res.Body, _ = json.Marshal(resBody)
-	res.StatusCode = http.StatusCreated
+	res.StatusCode = http.StatusCreated // 201
 
 	if err = u.session.CommitTx(tx); err != nil {
 		u.logger.Error(ctx, fmt.Sprintf("error when commiting tx: %v", err))
