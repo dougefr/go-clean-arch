@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/infra"
 	"github.com/dougefr/go-clean-arch/interface/gateway"
 	"github.com/dougefr/go-clean-arch/interface/restctrl"
+	"github.com/dougefr/go-clean-arch/usecase/interactor"
 	"github.com/gofiber/fiber"
 )
 

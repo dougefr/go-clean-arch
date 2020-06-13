@@ -7,7 +7,7 @@ package restctrl
 import (
 	"net/http"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
 )
 
 // RestRequest ...

@@ -12,9 +12,9 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/entity"
 	"github.com/dougefr/go-clean-arch/interface/iinfra/mock_iinfra"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

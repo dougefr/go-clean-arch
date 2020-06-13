@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
-	"github.com/dougefr/go-clean-arch/core/usecase/interactor/mock_interactor"
 	"github.com/dougefr/go-clean-arch/interface/iinfra/mock_iinfra"
+	"github.com/dougefr/go-clean-arch/usecase/interactor"
+	"github.com/dougefr/go-clean-arch/usecase/interactor/mock_interactor"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

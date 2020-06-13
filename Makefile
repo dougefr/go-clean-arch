@@ -36,8 +36,8 @@ run:
 	go run ./cmd/user-api/main.go
 
 mock:
-	mockgen -source=./core/usecase/igateway/user.go -destination=./core/usecase/igateway/mock_igateway/user.go
-	mockgen -source=./core/usecase/interactor/createuser.go -destination=./core/usecase/interactor/mock_interactor/createuser.go
-	mockgen -source=./core/usecase/interactor/searchuser.go -destination=./core/usecase/interactor/mock_interactor/searchuser.go
+	mockgen -source=./usecase/igateway/user.go -destination=./usecase/igateway/mock_igateway/user.go
+	mockgen -source=./usecase/interactor/createuser.go -destination=./usecase/interactor/mock_interactor/createuser.go
+	mockgen -source=./usecase/interactor/searchuser.go -destination=./usecase/interactor/mock_interactor/searchuser.go
 	mockgen -source=./interface/iinfra/database.go -destination=./interface/iinfra/mock_iinfra/database.go
 	mockgen -source=./interface/iinfra/logprovider.go -destination=./interface/iinfra/mock_iinfra/logprovider.go

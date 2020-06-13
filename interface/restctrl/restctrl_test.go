@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
 	"github.com/stretchr/testify/assert"
 )
 

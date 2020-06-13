@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dougefr/go-clean-arch/core/usecase/interactor"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
+	"github.com/dougefr/go-clean-arch/usecase/interactor"
 	"github.com/google/uuid"
 )
 

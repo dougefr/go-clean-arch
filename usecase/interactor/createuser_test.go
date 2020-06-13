@@ -9,9 +9,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
-	"github.com/dougefr/go-clean-arch/core/usecase/igateway/mock_igateway"
+	"github.com/dougefr/go-clean-arch/entity"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/usecase/igateway/mock_igateway"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dougefr/go-clean-arch/core/entity"
-	"github.com/dougefr/go-clean-arch/core/usecase/businesserr"
-	"github.com/dougefr/go-clean-arch/core/usecase/igateway"
+	"github.com/dougefr/go-clean-arch/entity"
 	"github.com/dougefr/go-clean-arch/interface/iinfra"
+	"github.com/dougefr/go-clean-arch/usecase/businesserr"
+	"github.com/dougefr/go-clean-arch/usecase/igateway"
 
 	// sqlite
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
