@@ -156,8 +156,9 @@ func TestUserCreate(t *testing.T) {
 		})
 
 		var resBody createResBody
-		json.Unmarshal(res.Body, &resBody)
+		err := json.Unmarshal(res.Body, &resBody)
 
+		assert.NoError(t, err)
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, createResBody{
 			ID:    "1",
@@ -224,8 +225,9 @@ func TestUserSearch(t *testing.T) {
 		})
 
 		var resBody []searchResBody
-		json.Unmarshal(res.Body, &resBody)
+		err := json.Unmarshal(res.Body, &resBody)
 
+		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, []searchResBody{
 			{
