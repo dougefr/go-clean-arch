@@ -39,3 +39,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: golangci-lint scan
+      uses: golangci/golangci-lint-action@v1
+      with:
+        version: v1.26
